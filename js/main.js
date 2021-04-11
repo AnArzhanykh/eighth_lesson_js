@@ -7,62 +7,18 @@ const modalOverlayRef = document.querySelector('.lightbox__overlay');
 const closeBtnRef = document.querySelector('[data-action="close-lightbox"]');
 const nextBtnRef = document.querySelector('[data-action="next"]');
 const prevBtnRef = document.querySelector('[data-action="prev"]');
-
-const imgArr = [];
-
+let imgIdRef;
 
 
-galeryRef.addEventListener('click', e =>{
-    e.preventDefault();
+galeryRef.addEventListener('click', openModal);
 
-    if(e.target.nodeName !== 'IMG'){
-        return
-    }
-    window.addEventListener('keydown', onPressEsc);
-    modalRef.classList.add('is-open');
-    modalImagRef.alt = e.target.alt;
-    let imgRefInd = e.target.dataset.source
-    modalImagRef.src = imgRefInd;
+modalOverlayRef.addEventListener('click', closeModal);
 
-    nextBtnRef.addEventListener('click', e =>{
-        for(let i =0; i < imgArr.length; i+=1){
-            if(imgRefInd ===imgArr[i] ){
-                let nextIndex = i+1
-                if(nextIndex === imgArr.length){
-                    break
-                }
-                imgRefInd = imgArr[nextIndex];
-                modalImagRef.src = imgArr[nextIndex];
-                break
-            }
-        }
-    });
+closeBtnRef.addEventListener('click', closeModal);
 
-    prevBtnRef.addEventListener('click', e =>{
-        for(let i =0; i < imgArr.length; i+=1){
-            if(imgRefInd ===imgArr[i] ){
-                let nextIndex = i-1;
-                if(i === 0){
-                    break
-                }
-                imgRefInd = imgArr[nextIndex];
-                modalImagRef.src = imgArr[nextIndex];
-                break
-            }
-        }
-    })
+nextBtnRef.addEventListener('click', takeNextImg);
 
-});
-
-modalOverlayRef.addEventListener('click', e =>{
-    window.removeEventListener('keydown',onPressEsc);
-    closeModal();
-});
-
-closeBtnRef.addEventListener('click', e =>{
-    window.removeEventListener('keydown',onPressEsc);
-    closeModal();
-});
+prevBtnRef.addEventListener('click', takePrevImg); 
 
 
 
@@ -73,8 +29,7 @@ const redderingImg = galery =>{
 }
 
 function createList(galery){
-    const gallereArr = [];
-    galery.map( ({original, preview, description}) =>{
+    const gallereArr = galery.map( ({original, preview, description}) =>{
 
         const itemRef = document.createElement('li');
         itemRef.classList.add('gallery__item');
@@ -89,15 +44,30 @@ function createList(galery){
         imgRef.src = preview;
         imgRef.alt = description;
         imgRef.setAttribute('data-source', original);
-        imgArr.push(original)
         linkRef.append(imgRef);
 
-        gallereArr.push(itemRef);
+        return itemRef
     });
     return gallereArr;
 }
 
+function openModal(e){
+        e.preventDefault();
+    
+        if(e.target.nodeName !== 'IMG'){
+            return
+        }
+
+        window.addEventListener('keydown', onPressEsc);
+        modalRef.classList.add('is-open');
+        modalImagRef.alt = e.target.alt;
+        imgIdRef = e.target.dataset.source
+        modalImagRef.src = imgIdRef;
+    }
+
+
 function closeModal(){
+    window.removeEventListener('keydown',onPressEsc);
     modalRef.classList.remove('is-open');
     modalImagRef.alt = '';
     modalImagRef.src = '';
@@ -107,6 +77,32 @@ function onPressEsc(e){
     if(e.code === 'Escape'){
         closeModal();
     }
+}
+
+function takePrevImg(){
+    galery.find((item, index) =>{
+        if(imgIdRef ===item.original){
+            let nextIndex = index - 1;
+            if(index === 0){
+                return
+            }
+            imgIdRef = galery[nextIndex].original;
+            return modalImagRef.src = galery[nextIndex].original;
+        };
+    })
+}
+
+function takeNextImg(){
+    galery.find((item, index) =>{
+        if(imgIdRef ===item.original){
+            let nextIndex = index + 1;
+            if(nextIndex === galery.length){
+                return
+            }
+            imgIdRef = galery[nextIndex].original;
+            return modalImagRef.src = galery[nextIndex].original;
+        };
+    })
 }
 
 redderingImg(galery);
