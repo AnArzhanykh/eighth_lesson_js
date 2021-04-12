@@ -12,20 +12,13 @@ let imgIdRef;
 
 galeryRef.addEventListener('click', openModal);
 
-modalOverlayRef.addEventListener('click', closeModal);
-
-closeBtnRef.addEventListener('click', closeModal);
-
-nextBtnRef.addEventListener('click', takeNextImg);
-
-prevBtnRef.addEventListener('click', takePrevImg); 
 
 
 
-const redderingImg = galery =>{   
+
+const renderImg = galery =>{   
     const listImg = createList(galery);
     galeryRef.append(...listImg);
-    // galeryRef.append(...createList(galery));
 }
 
 function createList(galery){
@@ -51,6 +44,7 @@ function createList(galery){
     return gallereArr;
 }
 
+
 function openModal(e){
         e.preventDefault();
     
@@ -59,6 +53,11 @@ function openModal(e){
         }
 
         window.addEventListener('keydown', onPressEsc);
+        modalOverlayRef.addEventListener('click', closeModal);
+        closeBtnRef.addEventListener('click', closeModal);       
+        nextBtnRef.addEventListener('click', takeNextImg);       
+        prevBtnRef.addEventListener('click', takePrevImg); 
+
         modalRef.classList.add('is-open');
         modalImagRef.alt = e.target.alt;
         imgIdRef = e.target.dataset.source
@@ -67,7 +66,12 @@ function openModal(e){
 
 
 function closeModal(){
+    modalOverlayRef.removeEventListener('click', closeModal);
+    closeBtnRef.removeEventListener('click', closeModal);
+    nextBtnRef.removeEventListener('click', takeNextImg);
+    prevBtnRef.removeEventListener('click', takePrevImg);
     window.removeEventListener('keydown',onPressEsc);
+    
     modalRef.classList.remove('is-open');
     modalImagRef.alt = '';
     modalImagRef.src = '';
@@ -80,29 +84,33 @@ function onPressEsc(e){
 }
 
 function takePrevImg(){
+    let prevIndex;
     galery.find((item, index) =>{
         if(imgIdRef ===item.original){
-            let nextIndex = index - 1;
+            prevIndex = index - 1;
             if(index === 0){
                 return
             }
-            imgIdRef = galery[nextIndex].original;
-            return modalImagRef.src = galery[nextIndex].original;
+            return prevIndex;
         };
-    })
+    });
+    imgIdRef = galery[prevIndex].original;
+    return modalImagRef.src = galery[prevIndex].original;
 }
 
 function takeNextImg(){
+    let nextIndex;
     galery.find((item, index) =>{
         if(imgIdRef ===item.original){
-            let nextIndex = index + 1;
+            nextIndex = index + 1;
             if(nextIndex === galery.length){
                 return
             }
-            imgIdRef = galery[nextIndex].original;
-            return modalImagRef.src = galery[nextIndex].original;
+            return nextIndex
         };
     })
+    imgIdRef = galery[nextIndex].original;
+    return modalImagRef.src = galery[nextIndex].original;
 }
 
-redderingImg(galery);
+renderImg(galery);
