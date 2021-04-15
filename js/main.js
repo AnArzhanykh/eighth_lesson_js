@@ -88,7 +88,7 @@ function takePrevImg(){
             return index;
         };
     });
-    const prevIndex = curenttIndex - 1 >=0 ? curentIndex - 1: 0;
+    const prevIndex = curentIndex - 1 >=0 ? curentIndex - 1: 0;
     curentImg = galery[prevIndex].original;
     return modalImagRef.src = curentImg;
 }
