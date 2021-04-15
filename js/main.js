@@ -7,7 +7,7 @@ const modalOverlayRef = document.querySelector('.lightbox__overlay');
 const closeBtnRef = document.querySelector('[data-action="close-lightbox"]');
 const nextBtnRef = document.querySelector('[data-action="next"]');
 const prevBtnRef = document.querySelector('[data-action="prev"]');
-let carentImg;
+let curentImg;
 
 
 galeryRef.addEventListener('click', openModal);
@@ -59,8 +59,8 @@ function openModal(e){
 
         modalRef.classList.add('is-open');
         modalImagRef.alt = e.target.alt;
-        carentImg = e.target.dataset.source
-        modalImagRef.src = carentImg;
+        curentImg = e.target.dataset.source
+        modalImagRef.src = curentImg;
     }
 
 
@@ -83,23 +83,20 @@ function onPressEsc(e){
 }
 
 function takePrevImg(){
-    let prevIndex;
-    const findIndex = galery.find((item, index) =>{
-        if(carentImg ===item.original){
+    const curentIndex = galery.find((item, index) =>{
+        if(curentImg ===item.original){
             return index;
         };
-        prevIndex = findIndex - 1;
-        prevIndex? prevIndex: 0;
-        
     });
-    carentImg = galery[prevIndex].original;
-    return modalImagRef.src = galery[prevIndex].original;
+    const prevIndex = curenttIndex - 1 >=0 ? curentIndex - 1: 0;
+    curentImg = galery[prevIndex].original;
+    return modalImagRef.src = curentImg;
 }
 
 function takeNextImg(){
     let nextIndex;
     galery.find((item, index) =>{
-        if(carentImg ===item.original){
+        if(curentImg ===item.original){
             nextIndex = index + 1;
             if(nextIndex === galery.length){
                 return
@@ -107,7 +104,7 @@ function takeNextImg(){
             return nextIndex
         };
     })
-    carentImg = galery[nextIndex].original;
+    curentImg = galery[nextIndex].original;
     return modalImagRef.src = galery[nextIndex].original;
 }
 
