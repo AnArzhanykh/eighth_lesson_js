@@ -8,6 +8,7 @@ const closeBtnRef = document.querySelector('[data-action="close-lightbox"]');
 const nextBtnRef = document.querySelector('[data-action="next"]');
 const prevBtnRef = document.querySelector('[data-action="prev"]');
 let curentImg;
+let curentIndex;
 
 
 galeryRef.addEventListener('click', openModal);
@@ -56,7 +57,7 @@ function openModal(e){
         modalOverlayRef.addEventListener('click', closeModal);
         closeBtnRef.addEventListener('click', closeModal);
         prevBtnRef.addEventListener('click', takePrevImg); 
-
+        nextBtnRef.addEventListener('click', takeNextImg);
         modalRef.classList.add('is-open');
         modalImagRef.alt = e.target.alt;
         curentImg = e.target.dataset.source
@@ -76,38 +77,36 @@ function closeModal(){
     modalImagRef.src = '';
 }
 
+
 function onPressEsc(e){
     if(e.code === 'Escape'){
         closeModal();
     }
 }
 
+
 function takePrevImg(){
-    let localindex;
-    const curentIndex = galery.find((item, index) =>{
-        if(curentImg ===item.original){
-            return localindex=index;
-        };
-    });
-    console.log(curentIndex);
-    const prevIndex = localindex - 1 >=0 ? localindex - 1: 0;
+    findCurentIndex();
+    const prevIndex = curentIndex - 1 >=0 ? curentIndex - 1: 0;
     curentImg = galery[prevIndex].original;
     return modalImagRef.src = curentImg;
 }
 
+
 function takeNextImg(){
-    let nextIndex;
-    galery.find((item, index) =>{
-        if(curentImg ===item.original){
-            nextIndex = index + 1;
-            if(nextIndex === galery.length){
-                return
-            }
-            return nextIndex
-        };
-    })
+    findCurentIndex();
+    const nextIndex = curentIndex + 1 === galery.length ? curentIndex : curentIndex +1;
     curentImg = galery[nextIndex].original;
     return modalImagRef.src = galery[nextIndex].original;
+}
+
+
+function findCurentIndex (){
+    galery.find((item, index) =>{
+        if(curentImg ===item.original){
+            curentIndex=index;
+        };
+    });
 }
 
 renderImg(galery);
