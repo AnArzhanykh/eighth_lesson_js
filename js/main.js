@@ -83,12 +83,14 @@ function onPressEsc(e){
 }
 
 function takePrevImg(){
+    let localindex;
     const curentIndex = galery.find((item, index) =>{
         if(curentImg ===item.original){
-            return index;
+            return localindex=index;
         };
     });
-    const prevIndex = curentIndex - 1 >=0 ? curentIndex - 1: 0;
+    console.log(curentIndex);
+    const prevIndex = localindex - 1 >=0 ? localindex - 1: 0;
     curentImg = galery[prevIndex].original;
     return modalImagRef.src = curentImg;
 }
