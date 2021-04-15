@@ -7,7 +7,7 @@ const modalOverlayRef = document.querySelector('.lightbox__overlay');
 const closeBtnRef = document.querySelector('[data-action="close-lightbox"]');
 const nextBtnRef = document.querySelector('[data-action="next"]');
 const prevBtnRef = document.querySelector('[data-action="prev"]');
-let imgIdRef;
+let carentImg;
 
 
 galeryRef.addEventListener('click', openModal);
@@ -54,14 +54,13 @@ function openModal(e){
 
         window.addEventListener('keydown', onPressEsc);
         modalOverlayRef.addEventListener('click', closeModal);
-        closeBtnRef.addEventListener('click', closeModal);       
-        nextBtnRef.addEventListener('click', takeNextImg);       
+        closeBtnRef.addEventListener('click', closeModal);
         prevBtnRef.addEventListener('click', takePrevImg); 
 
         modalRef.classList.add('is-open');
         modalImagRef.alt = e.target.alt;
-        imgIdRef = e.target.dataset.source
-        modalImagRef.src = imgIdRef;
+        carentImg = e.target.dataset.source
+        modalImagRef.src = carentImg;
     }
 
 
@@ -85,23 +84,22 @@ function onPressEsc(e){
 
 function takePrevImg(){
     let prevIndex;
-    galery.find((item, index) =>{
-        if(imgIdRef ===item.original){
-            prevIndex = index - 1;
-            if(index === 0){
-                return
-            }
-            return prevIndex;
+    const findIndex = galery.find((item, index) =>{
+        if(carentImg ===item.original){
+            return index;
         };
+        prevIndex = findIndex - 1;
+        prevIndex? prevIndex: 0;
+        
     });
-    imgIdRef = galery[prevIndex].original;
+    carentImg = galery[prevIndex].original;
     return modalImagRef.src = galery[prevIndex].original;
 }
 
 function takeNextImg(){
     let nextIndex;
     galery.find((item, index) =>{
-        if(imgIdRef ===item.original){
+        if(carentImg ===item.original){
             nextIndex = index + 1;
             if(nextIndex === galery.length){
                 return
@@ -109,7 +107,7 @@ function takeNextImg(){
             return nextIndex
         };
     })
-    imgIdRef = galery[nextIndex].original;
+    carentImg = galery[nextIndex].original;
     return modalImagRef.src = galery[nextIndex].original;
 }
 
