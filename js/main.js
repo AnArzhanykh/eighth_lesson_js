@@ -48,11 +48,11 @@ function createList(galery){
 
 function openModal(e){
         e.preventDefault();
-    
         if(e.target.nodeName !== 'IMG'){
             return
         }
-
+        window.addEventListener('keydown', nextImage);
+        window.addEventListener('keydown', prevImage);
         window.addEventListener('keydown', onPressEsc);
         modalOverlayRef.addEventListener('click', closeModal);
         closeBtnRef.addEventListener('click', closeModal);
@@ -71,6 +71,8 @@ function closeModal(){
     nextBtnRef.removeEventListener('click', takeNextImg);
     prevBtnRef.removeEventListener('click', takePrevImg);
     window.removeEventListener('keydown',onPressEsc);
+    window.removeEventListener('keydown', nextImage);
+    window.removeEventListener('keydown', prevImage);
     
     modalRef.classList.remove('is-open');
     modalImagRef.alt = '';
@@ -109,4 +111,14 @@ function findCurentIndex (){
     });
 }
 
+function nextImage(e){
+    if(e.key ==='ArrowRight' || e.code ==='KeyD') takeNextImg()
+}
+
+function prevImage(e){
+    if(e.key ==='ArrowLeft' || e.code ==='KeyA')takePrevImg()
+}
+
+
 renderImg(galery);
+
